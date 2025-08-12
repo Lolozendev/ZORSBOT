@@ -22,7 +22,7 @@ jobs:
       - name: Run pyrefly (format)
         id: run_pyrefly
         run: |
-          pyrefly . --check >> $GITHUB_OUTPUT
+          pyrefly check --output-format min-text >> $GITHUB_OUTPUT
         continue-on-error: true
 
   ruff:
@@ -40,7 +40,7 @@ jobs:
       - name: Run ruff (lint)
         id: run_ruff
         run: |
-          ruff check . --output-format text >> $GITHUB_OUTPUT
+          ruff check . --fix >> $GITHUB_OUTPUT
         continue-on-error: true
 
   report:
