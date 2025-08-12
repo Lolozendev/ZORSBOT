@@ -45,6 +45,6 @@ jobs:
         with:
           python-version: '3.13'
       - name: Générer le rapport Markdown
-        run: python generate_report.py
+        run: python .github/scripts/generate_report.py
       - name: Ajouter le rapport au résumé
         run: echo "Rapport généré" # Remplacer par l'action souhaitée
