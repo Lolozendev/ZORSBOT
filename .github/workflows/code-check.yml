@@ -20,11 +20,12 @@ jobs:
       - name: Install dependencies
         run: pip install pyrefly
       - name: Run pyrefly (format)
-        run: pyrefly . --check > pyrefly_output.txt
+        id: run_pyrefly
+        run: |
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          pyrefly . --check >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
-      - name: Set output
-        id: set_output
-        run: echo "result<<EOF" >> $GITHUB_OUTPUT && cat pyrefly_output.txt >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
 
   ruff:
     runs-on: ubuntu-latest
@@ -39,11 +40,12 @@ jobs:
       - name: Install dependencies
         run: pip install ruff
       - name: Run ruff (lint)
-        run: ruff check . --output-format text > ruff_output.txt
+        id: run_ruff
+        run: |
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          ruff check . --output-format text >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
         continue-on-error: true
-      - name: Set output
-        id: set_output
-        run: echo "result<<EOF" >> $GITHUB_OUTPUT && cat ruff_output.txt >> $GITHUB_OUTPUT && echo "EOF" >> $GITHUB_OUTPUT
 
   report:
     runs-on: ubuntu-latest
@@ -55,3 +57,5 @@ jobs:
           PYREFLY_RESULT: ${{ needs.pyrefly.outputs.result }}
           RUFF_RESULT: ${{ needs.ruff.outputs.result }}
         run: python .github/scripts/generate_report.py
+      - name: Upload report
+        run: car report.md > $GITHUB_STEP_SUMMARY
